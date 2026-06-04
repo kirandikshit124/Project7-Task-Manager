@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { getTasks, postTask, deleteTask, toggleTask, updateTask } from "./services/taskApi";
-import './App.css'
 import Header from "./components/Header";
 import TaskList from "./components/TaskList";
 import TaskForm from "./components/TaskForm";
