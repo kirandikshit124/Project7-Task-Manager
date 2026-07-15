@@ -13,7 +13,7 @@ function TaskForm({ onAddTask, editingTask }) {
         }
     }, [editingTask]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const taskData = { title, description, dueDate};
         await onAddTask(taskData);
