@@ -30,14 +30,14 @@ function App() {
     try {
       if (editingTask) {
         await updateTask(
-          editingTask.id,
+          editingTask._id,
           taskData
         );
         setEditingTask(null);
       } else {
         await postTask(taskData);
       }
-      fetchTasks();
+      await fetchTasks();
     } catch (error) {
       console.log(error);
     }
@@ -67,9 +67,6 @@ function App() {
     setEditingTask(task);
   };
 
-  const sortedTasks = [...tasks].sort(
-    (a, b) => b.id - a.id
-  );
   const filteredTasks = sortedTasks.filter((task) => {
     const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase());
     if (filter === "active") {

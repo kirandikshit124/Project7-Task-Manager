@@ -16,7 +16,7 @@ function TaskForm({ onAddTask, editingTask }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const taskData = { title, description, dueDate};
-        onAddTask(taskData);
+        await onAddTask(taskData);
         setTitle("");
         setDescription("");
         setDueDate("");
