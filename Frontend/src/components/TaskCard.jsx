@@ -33,11 +33,11 @@ function TaskCard({ task, onDelete, onToggle, onEdit }) {
             </div>
             <div className="flex gap-3 mt-5 flex items-center justify-between w-full z-50">
                 <button
-                    onClick={() => onToggle(task.id)}
+                    onClick={() => onToggle(task._id)}
                     className="bg-[#66B539] hover:bg-[#5aa830] px-3 py-2 rounded text-white">
                     Complete</button>
                 <button
-                    onClick={() => onDelete(task.id)}
+                    onClick={() => onDelete(task._id)}
                     className="bg-white hover:bg-gray-50 text-gray-600 px-3 py-2 rounded">
                     Delete</button>
             </div>

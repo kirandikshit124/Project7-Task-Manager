@@ -1,66 +1,111 @@
-const Task = require("../model/taskModel");
+const Task = require("../models/taskModel");
 
-exports.getTasks = (req, res, next) => {
-    Task.fetchAll((tasks) => {
+exports.getTasks = async (req, res, next) => {
+    try {
+        const tasks = await Task.find().sort({ createdAt: -1 });
         res.status(200).json(tasks);
-    });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
 };
 
-exports.postTask = (req, res, next) => {
+exports.postTask = async (req, res) => {
+  try {
     const { title, description, dueDate } = req.body;
     if (!title) {
-        return res.status(400).json({
-            message: "Title is required"
-        });
+      return res.status(400).json({
+        message: "Title is required",
+      });
     }
     if (!dueDate) {
-        return res.status(400).json({
-            message: "Due date is required"
-        });
+      return res.status(400).json({
+        message: "Due date is required",
+      });
     }
-    const newTask = {
-        id: Date.now(),
+    const task = await Task.create({
+      title,
+      description,
+      dueDate,
+      completed: false,
+    });
+    res.status(201).json({
+      message: "Task Created Successfully",
+      task,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+exports.deleteTask = async (req, res) => {
+  try {
+    await Task.findByIdAndDelete(req.params.id);
+    res.status(200).json({
+      message: "Task Deleted Successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+exports.toggleTask = async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+      return res.status(404).json({
+        message: "Task not found",
+      });
+    }
+    task.completed = !task.completed;
+    await task.save();
+    res.status(200).json({
+      message: "Task Toggled Successfully",
+      task,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+exports.updateTask = async (req, res) => {
+  try {
+    const { title, description, dueDate } = req.body;
+    if (!title) {
+      return res.status(400).json({
+        message: "Title is required",
+      });
+    }
+    if (!dueDate) {
+      return res.status(400).json({
+        message: "Due date is required",
+      });
+    }
+    const task = await Task.findByIdAndUpdate(
+      req.params.id,
+      {
         title,
         description,
         dueDate,
-        completed: false
-    };
-    Task.saveTask(newTask, () => {
-        res.status(201).json({
-            message: "Task Created Successfully",
-            task: newTask
-        });
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({
+      message: "Task Updated Successfully",
+      task,
     });
+  } catch (error) {
+    res.status(500).json({
+       message: error.message,
+    });
+  }
 };
-
-exports.deleteTask = (req, res, next) => {
-    const taskId = req.params.id;
-    Task.deleteTask(taskId, () => {
-        res.status(200).json({ message: "Task Deleted Successfully" });
-    });
-}
-
-exports.toggleTask = (req, res, next) => {
-    const taskId = req.params.id;
-    Task.toggleTask(taskId, () => {
-        res.status(200).json({ message: "Task Toggled Successfully" });
-    });
-}
-
-exports.updateTask = (req, res, next) => {
-    const taskId = req.params.id;
-    const updatedData = req.body;
-    if (!updatedData.title) {
-        return res.status(400).json({
-            message: "Title is required"
-        });
-    }
-    if (!updatedData.dueDate) {
-        return res.status(400).json({
-            message: "Due date is required"
-        });
-    }
-    Task.updateTask(taskId, updatedData, () => {
-        res.status(200).json({ message: "Task Updated Successfully" });
-    });
-}
