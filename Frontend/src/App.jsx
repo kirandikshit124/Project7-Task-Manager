@@ -67,7 +67,7 @@ function App() {
     setEditingTask(task);
   };
 
-  sortedTasks=tasks
+  const sortedTasks=tasks
   const filteredTasks = sortedTasks.filter((task) => {
     const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase());
     if (filter === "active") {
