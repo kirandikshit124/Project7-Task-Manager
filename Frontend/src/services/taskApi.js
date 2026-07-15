@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/api/tasks';
+const API_URL = 'https://taskora-task-manager-api.onrender.com/api/tasks';
 
 export const getTasks = () => 
     axios.get(API_URL);
